@@ -6,11 +6,6 @@ COPY package*.json .
 COPY nest-cli.json .
 RUN npm install
 
-WORKDIR /usr/src/server/apps/auth
-COPY apps/auth/tsconfig*.json .
-COPY apps/auth/package*.json .
-RUN npm install
-
 WORKDIR /usr/src/server
-COPY apps/auth apps/auth
+COPY apps/root apps/root
 COPY libs libs

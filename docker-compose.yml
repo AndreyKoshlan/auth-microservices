@@ -1,0 +1,51 @@
+version: '3'
+services:
+  root:
+    container_name: root
+    build: .
+    restart: always
+    env_file:
+      - .env
+    command: npm run start:dev root --prefix /usr/src/server
+  auth:
+    container_name: auth
+    build:
+      context: .
+      dockerfile: ./apps/auth/Dockerfile
+    restart: always
+    env_file:
+      - .env
+    command: npm run start:dev auth --prefix /usr/src/server
+  profile:
+    container_name: profile
+    build:
+      context: .
+      dockerfile: ./apps/profile/Dockerfile
+    restart: always
+    env_file:
+      - .env
+    command: npm run start:dev profile --prefix /usr/src/server
+  postgres:
+    container_name: postgres
+    image: postgres:15.2
+    restart: always
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=movies
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./init-database.sh:/docker-entrypoint-initdb.d/init-database.sh
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3.11-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbit_data:/var/lib/rabbitmq
+volumes:
+  pg_data:
+  rabbit_data:

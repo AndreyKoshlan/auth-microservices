@@ -1,7 +1,8 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SharedService } from './shared.service';
-import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ClientsModule } from '@nestjs/microservices';
 
 @Module({
   imports: [
@@ -15,17 +16,18 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 })
 export class SharedModule {
   static getRmqModule(name_env: string, queueName_env: string): DynamicModule {
-    return TypeOrmModule.forRootAsync({
-      imports: [ConfigModule, SharedService],
+    console.log('====================' + ' ' + process.env[name_env] + ' ' + name_env);
+    return ClientsModule.registerAsync([{
+      name: process.env[name_env],
+      imports: [ConfigModule, SharedModule],
       useFactory: (configService: ConfigService, sharedService: SharedService) => (
           (() => {
             const queueName = configService.get(queueName_env);
-            const options = sharedService.getRmqOptions(queueName);
-            return { ...options, name: configService.get(name_env) };
+            return sharedService.getRmqOptions(queueName);
           })()
       ),
       inject: [ConfigService, SharedService],
-    });
+    }]);
   }
 
   static getTypeormModule(dbName_env: string): DynamicModule {
