@@ -1,2 +1,0 @@
-CREATE DATABASE profile;
-CREATE DATABASE user;

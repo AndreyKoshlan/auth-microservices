@@ -1,0 +1,2 @@
+CREATE DATABASE profiles;
+CREATE DATABASE users;
