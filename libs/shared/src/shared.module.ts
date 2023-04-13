@@ -16,7 +16,6 @@ import { ClientsModule } from '@nestjs/microservices';
 })
 export class SharedModule {
   static getRmqModule(name_env: string, queueName_env: string): DynamicModule {
-    console.log('====================' + ' ' + process.env[name_env] + ' ' + name_env);
     return ClientsModule.registerAsync([{
       name: process.env[name_env],
       imports: [ConfigModule, SharedModule],
