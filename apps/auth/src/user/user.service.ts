@@ -14,7 +14,7 @@ export class UserService {
   ) {}
 
   async create(email: string, password: string) {
-    const salt = this.configService.get<string>('postgres_salt');
+    const salt = +this.configService.get<string>('POSTGRES_SALT');
     const passwordHash = await bcrypt.hash(password, salt);
     return this.userRepository.save({ email, passwordHash });
   }

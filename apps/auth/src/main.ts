@@ -13,6 +13,7 @@ async function bootstrap() {
 
   app.connectMicroservice<MicroserviceOptions>(rmqOptions);
 
+  app.enableCors();
   await app.startAllMicroservices();
   await app.listen(3000);
 }
